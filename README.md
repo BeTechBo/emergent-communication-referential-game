@@ -1,2 +1,86 @@
-# emergent-communication-referential-game
-PyTorch replication of Havrylov &amp; Titov (NeurIPS 2017), two agents learn an emergent discrete language to solve a referential game, with Gumbel-Softmax vs. REINFORCE training and compositionality analysis.
+# Emergent Communication in a Referential Game
+
+A PyTorch implementation of the referential game from **Havrylov & Titov, "Emergence of Language with Multi-agent Games: Learning to Communicate with Sequences of Symbols"** (NeurIPS 2017). [[paper]](https://arxiv.org/abs/1705.11192)
+
+## Paper Replication
+
+This project replicates the core communication game from the paper: two neural agents — a **Sender** and a **Receiver** — are trained jointly on a purely functional task (identifying the correct target among distractors), with no supervision on what their shared communication protocol should look like. A discrete symbolic "language" emerges from the training signal alone.
+
+This implementation includes:
+- The referential game environment (Sender/Receiver agents, synthetic concept data)
+- Two training regimes: **Gumbel-Softmax** (differentiable relaxation) and **REINFORCE** (policy gradient), compared directly
+- Post-training analysis of the emergent protocol: message entropy, topographic similarity, and per-symbol usage
+
+## Overview
+
+- **Sender**: observes a target concept (e.g. a `(shape, color, size)` tuple) and encodes it as a short sequence of discrete symbols.
+- **Receiver**: reads the Sender's message and must pick the correct target out of a set of distractor concepts.
+- Neither agent is told what the symbols mean. If the Receiver consistently picks correctly, a functioning communication protocol has emerged between them — this project measures how compositional and interpretable that protocol turns out to be.
+
+## Project Structure
+
+```
+emergent-communication/
+├── data/
+│   └── synthetic_generator.py      # generates attribute-based concept tuples + distractor sets
+├── src/
+│   ├── sender.py                   # Sender agent: concept -> message
+│   ├── receiver.py                 # Receiver agent: message -> target selection
+│   ├── game.py                     # referential game loop / environment
+│   ├── train_gumbel.py             # training via Gumbel-Softmax (differentiable)
+│   ├── train_reinforce.py          # training via REINFORCE (policy gradient baseline)
+│   └── metrics.py                  # entropy, topographic similarity, symbol-usage analysis
+├── notebooks/
+│   └── analysis.ipynb              # loads training logs, produces final plots only
+├── configs/
+│   └── default.yaml
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+Training scripts log metrics to file (not notebook cell output); `notebooks/analysis.ipynb` only loads those logs and produces final plots, so it stays small and clean rather than filling with raw per-epoch dumps.
+
+## Installation
+
+```bash
+git clone https://github.com/BeTechBo/emergent-communication.git
+cd emergent-communication
+pip install -r requirements.txt
+```
+
+## Usage
+
+```bash
+# generate synthetic concept dataset
+python data/synthetic_generator.py --output data/concepts.pt
+
+# train with Gumbel-Softmax
+python src/train_gumbel.py --config configs/default.yaml
+
+# train with REINFORCE (comparison)
+python src/train_reinforce.py --config configs/default.yaml
+```
+
+Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and plots.
+
+## Results
+
+| Method | Task Accuracy | Notes |
+|---|---|---|
+| Gumbel-Softmax | *TBD* | differentiable, straight-through estimator |
+| REINFORCE | *TBD* | moving-average baseline for variance reduction |
+
+*(Table to be filled in once training results are available.)*
+
+## Emergent Language Analysis
+
+- **Message entropy over training** — tracks whether the protocol converges to a stable, low-entropy code.
+- **Topographic similarity** — correlation between distance in concept-space and distance in message-space; a proxy for compositionality.
+- **Symbol usage** — whether individual symbols reliably correspond to specific attributes (e.g. a symbol that consistently means "red").
+
+*(Findings and plots to be added after training.)*
+
+## License
+
+MIT — see [LICENSE](LICENSE).
