@@ -1,0 +1,26 @@
+data:
+  n_distractors: 4
+  vocab_sizes:
+  - 4
+  - 4
+  - 5
+gumbel:
+  decay_rate: 1.0
+  end_temperature: 1.0
+  start_temperature: 1.0
+logging:
+  log_dir: logs
+  log_file: train_baseline_2.csv
+model:
+  embed_dim: 32
+  hidden_dim: 64
+  max_length: 5
+  mlp_hidden_dim: 64
+  vocab_size: 10
+training:
+  batch_size: 64
+  epochs: 100
+  learning_rate: 0.001
+  patience: 100
+  seed: 2
+  weight_decay: 0.0
