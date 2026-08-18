@@ -44,8 +44,8 @@ Training scripts log metrics to file (not notebook cell output); `notebooks/anal
 ## Installation
 
 ```bash
-git clone https://github.com/BeTechBo/emergent-communication.git
-cd emergent-communication
+git clone https://github.com/BeTechBo/emergent-communication-referential-game.git
+cd emergent-communication-referential-game
 pip install -r requirements.txt
 ```
 
@@ -68,10 +68,10 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 
 | Method | Task Accuracy | Notes |
 |---|---|---|
-| Gumbel-Softmax | *TBD* | differentiable, straight-through estimator |
+| Gumbel-Softmax | 93.75% (val) | differentiable, straight-through estimator; 288-concept space, early stopping at epoch 61 |
 | REINFORCE | *TBD* | moving-average baseline for variance reduction |
 
-*(Table to be filled in once training results are available.)*
+**Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol.
 
 ## Emergent Language Analysis
 
