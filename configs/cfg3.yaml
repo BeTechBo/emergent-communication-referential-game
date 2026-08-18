@@ -1,0 +1,8 @@
+training:
+  epochs: 50
+  weight_decay: 0.0
+  patience: 100
+gumbel:
+  start_temperature: 1.5
+  end_temperature: 1.0
+  decay_rate: 0.95

@@ -1,0 +1,34 @@
+# configs/default.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# Default hyperparameters for Phase 3: Gumbel-Softmax training.
+# All values can be overridden by passing a custom YAML path to train_gumbel.py.
+
+training:
+  epochs: 400
+  batch_size: 16
+  learning_rate: 1.0e-3
+  weight_decay: 0.0
+  patience: 30
+  seed: 42
+
+gumbel:
+  # Fixed temperature baseline
+  start_temperature: 1.0
+  end_temperature: 1.0
+  decay_rate: 1.0
+
+
+model:
+  vocab_size: 10        # communication vocabulary size (index 0 reserved = EOS)
+  embed_dim: 32         # symbol embedding dimensionality
+  hidden_dim: 64       # Sender LSTM + Receiver LSTM hidden size
+  max_length: 5         # maximum symbols per message
+  mlp_hidden_dim: 64   # Sender MLP concept-encoder hidden width
+
+data:
+  vocab_sizes: [6, 6, 8]   # per-attribute vocab sizes; 6*6*8 = 288 concepts
+  n_distractors: 4          # distractors per game; total candidates = n_distractors + 1
+
+logging:
+  log_dir: logs
+  log_file: train_gumbel.csv
