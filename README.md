@@ -66,10 +66,14 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 
 ## Results
 
+## Results
+
 | Method | Task Accuracy | Notes |
 |---|---|---|
 | Gumbel-Softmax | 93.75% (val) | differentiable, straight-through estimator; 288-concept space, early stopping at epoch 61 |
-| REINFORCE | *TBD* | moving-average baseline for variance reduction |
+| REINFORCE | 81.25% (val) | discrete sampling + moving-average baseline; same dataset, early stopping at epoch 86 |
+
+**Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol. REINFORCE converged more slowly and to a lower final validation accuracy (81.25% vs. 93.75%) than Gumbel-Softmax, consistent with the higher variance of the policy-gradient estimator relative to the differentiable relaxation — the Gumbel-Softmax method reached its best checkpoint in 61 epochs, while REINFORCE required 86.
 
 **Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol.
 
