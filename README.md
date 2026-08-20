@@ -85,6 +85,18 @@ Both training methods reliably solve the task (all four runs well above the 20% 
 
 Task accuracy and message entropy varied substantially by seed for both methods (e.g. Gumbel-Softmax ranged 75–93.75% accuracy across two seeds), so no reliable accuracy or entropy ranking between the two training methods can be claimed from this many runs. Topographic similarity was the one metric that consistently favored Gumbel-Softmax across both seeds (0.253 vs 0.193, and 0.233 vs 0.148), a weak signal worth further investigation with more seeds, but not treated here as a strong conclusion.
 
+### Plots
+
+**Training curves (seed 42):**
+![Training curves](notebooks/figures/training_curves.png)
+*Note: both methods' best checkpoints (used for all reported results) occur mid-run — Gumbel-Softmax at epoch 61, REINFORCE at epoch 86 — before the visible late-run degradation, which early stopping correctly avoided by restoring the earlier best weights.*
+
+**Message entropy across seeds:**
+![Entropy comparison](notebooks/figures/entropy_comparison.png)
+
+**Topographic similarity across seeds:**
+![Topographic similarity comparison](notebooks/figures/topo_similarity_comparison.png)
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
