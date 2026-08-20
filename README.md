@@ -31,7 +31,8 @@ emergent-communication/
 │   ├── train_reinforce.py          # training via REINFORCE (policy gradient baseline)
 │   └── metrics.py                  # entropy, topographic similarity, symbol-usage analysis
 ├── notebooks/
-│   └── analysis.ipynb              # loads training logs, produces final plots only
+│   ├── analysis.ipynb              # loads training logs, produces final plots only
+│   └── figures/                    # saved plot images, embedded in this README
 ├── configs/
 │   └── default.yaml
 ├── requirements.txt
@@ -81,7 +82,7 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 | Message Entropy | 3.761 bits | 2.083 bits | 2.312 bits | 3.351 bits |
 | Topographic Similarity | 0.253 | 0.233 | 0.193 | 0.148 |
 
-Both training methods reliably solve the task (all four runs well above the 20% chance baseline) but consistently produce only weak-to-moderate compositionality, topographic similarity stayed in the 0.15–0.25 range across both methods and both seeds, well above 0 (random) but far below 1.0 (fully compositional), and no individual symbol was found to map cleanly onto a single concept attribute in any run. This is consistent with known findings in the emergent communication literature (e.g. Kottur et al. 2017, Chaabouni et al. 2020), where task success does not guarantee a human-interpretable, compositional code without additional pressure (e.g. population-based training, explicit compositionality regularization, or limited channel capacity), none of which are included in this implementation.
+Both training methods reliably solve the task (all four runs well above the 20% chance baseline) but consistently produce only weak-to-moderate compositionality — topographic similarity stayed in the 0.15–0.25 range across both methods and both seeds, well above 0 (random) but far below 1.0 (fully compositional), and no individual symbol was found to map cleanly onto a single concept attribute in any run. This is consistent with known findings in the emergent communication literature (e.g. Kottur et al. 2017, Chaabouni et al. 2020), where task success does not guarantee a human-interpretable, compositional code without additional pressure (e.g. population-based training, explicit compositionality regularization, or limited channel capacity), none of which are included in this implementation.
 
 Task accuracy and message entropy varied substantially by seed for both methods (e.g. Gumbel-Softmax ranged 75–93.75% accuracy across two seeds), so no reliable accuracy or entropy ranking between the two training methods can be claimed from this many runs. Topographic similarity was the one metric that consistently favored Gumbel-Softmax across both seeds (0.253 vs 0.193, and 0.233 vs 0.148), a weak signal worth further investigation with more seeds, but not treated here as a strong conclusion.
 
@@ -89,13 +90,15 @@ Task accuracy and message entropy varied substantially by seed for both methods 
 
 **Training curves (seed 42):**
 ![Training curves](notebooks/figures/training_curves.png)
-*Note: both methods' best checkpoints (used for all reported results) occur mid-run — Gumbel-Softmax at epoch 61, REINFORCE at epoch 86 — before the visible late-run degradation, which early stopping correctly avoided by restoring the earlier best weights.*
+*Both methods reach their best validation performance mid-run — Gumbel-Softmax at epoch 61, REINFORCE at epoch 86 — before visibly degrading in later epochs. All reported results use the checkpoint saved at each method's best epoch, not the final epoch; early stopping correctly restored these earlier checkpoints rather than the noisy late-run state shown at the right edge of the plot.*
 
 **Message entropy across seeds:**
 ![Entropy comparison](notebooks/figures/entropy_comparison.png)
+*All four runs sit well below the theoretical maximum entropy (8.17 bits) for this vocabulary/message length, meaning none of the models degenerated into sending fully random, uninformative messages. Entropy varies more by seed than by training method — compare Gumbel-Softmax seed 42 (3.76 bits) against Gumbel-Softmax seed 1 (2.08 bits) — which is why entropy is not used here to rank Gumbel-Softmax against REINFORCE.*
 
 **Topographic similarity across seeds:**
 ![Topographic similarity comparison](notebooks/figures/topo_similarity_comparison.png)
+*This is the one metric that ordered consistently by method rather than by seed: both Gumbel-Softmax runs (0.253, 0.233) sit above both REINFORCE runs (0.193, 0.148). All four bars are still well below 1.0, reinforcing the "weak-to-moderate compositionality" conclusion above — the protocol is more compositional than chance, but not cleanly interpretable at the level of individual symbols.*
 
 ## License
 
