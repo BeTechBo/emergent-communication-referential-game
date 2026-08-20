@@ -78,10 +78,35 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 **Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol.
 
 ## Emergent Language Analysis
+## Emergent Language Analysis
 
-- **Message entropy over training** — tracks whether the protocol converges to a stable, low-entropy code.
-- **Topographic similarity** — correlation between distance in concept-space and distance in message-space; a proxy for compositionality.
-- **Symbol usage** — whether individual symbols reliably correspond to specific attributes (e.g. a symbol that consistently means "red").
+| Metric | Gumbel-Softmax (seed 42) | Gumbel-Softmax (seed 1) | REINFORCE (seed 42) | REINFORCE (seed 1) |
+|---|---|---|---|---|
+| Val Accuracy | 93.75% | 75.00% | 81.25% | 87.50% |
+| Message Entropy | 3.761 bits | 2.083 bits | 2.312 bits | 3.351 bits |
+| Topographic Similarity | 0.253 | 0.233 | 0.193 | 0.148 |
+
+Both training methods reliably solve the task (all four runs well above 
+the 20% chance baseline) but consistently produce only weak-to-moderate 
+compositionality — topographic similarity stayed in the 0.15-0.25 range 
+across both methods and both seeds, well above 0 (random) but far below 
+1.0 (fully compositional), and no individual symbol was found to map 
+cleanly onto a single concept attribute in any run. This is consistent 
+with known findings in the emergent communication literature (e.g. 
+Kottur et al. 2017, Chaabouni et al. 2020), where task success does not 
+guarantee a human-interpretable, compositional code without additional 
+pressure (e.g. population-based training, explicit compositionality 
+regularization, or limited channel capacity) — none of which are 
+included in this implementation.
+
+Task accuracy and message entropy varied substantially by seed for both 
+methods (e.g. Gumbel-Softmax ranged 75-93.75% accuracy across two seeds), 
+so no reliable accuracy or entropy ranking between the two training 
+methods can be claimed from this many runs. Topographic similarity was 
+the one metric that consistently favored Gumbel-Softmax across both 
+seeds (0.253 vs 0.193, and 0.233 vs 0.148), a weak signal worth further 
+investigation with more seeds, but not treated here as a strong 
+conclusion.
 
 *(Findings and plots to be added after training.)*
 
