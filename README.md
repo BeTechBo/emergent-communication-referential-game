@@ -11,7 +11,7 @@ A PyTorch implementation of the referential game from **Havrylov & Titov, "Emerg
 
 ## Paper Replication
 
-This project replicates the core communication game from the paper: two neural agents — a **Sender** and a **Receiver** — are trained jointly on a purely functional task (identifying the correct target among distractors), with no supervision on what their shared communication protocol should look like. A discrete symbolic "language" emerges from the training signal alone.
+This project replicates the core communication game from the paper: two neural agents, a **Sender** and a **Receiver**, are trained jointly on a purely functional task (identifying the correct target among distractors), with no supervision on what their shared communication protocol should look like. A discrete symbolic "language" emerges from the training signal alone.
 
 This implementation includes:
 - The referential game environment (Sender/Receiver agents, synthetic concept data)
