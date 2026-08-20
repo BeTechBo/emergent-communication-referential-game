@@ -66,16 +66,12 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 
 ## Results
 
-## Results
-
 | Method | Task Accuracy | Notes |
 |---|---|---|
 | Gumbel-Softmax | 93.75% (val) | differentiable, straight-through estimator; 288-concept space, early stopping at epoch 61 |
 | REINFORCE | 81.25% (val) | discrete sampling + moving-average baseline; same dataset, early stopping at epoch 86 |
 
-**Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol. REINFORCE converged more slowly and to a lower final validation accuracy (81.25% vs. 93.75%) than Gumbel-Softmax, consistent with the higher variance of the policy-gradient estimator relative to the differentiable relaxation — the Gumbel-Softmax method reached its best checkpoint in 61 epochs, while REINFORCE required 86.
-
-**Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol.
+**Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol. REINFORCE converged more slowly and to a lower final validation accuracy (81.25% vs. 93.75%) than Gumbel-Softmax on this run, consistent with the higher variance of the policy-gradient estimator relative to the differentiable relaxation — the Gumbel-Softmax method reached its best checkpoint in 61 epochs, while REINFORCE required 86. (See below: this accuracy gap did not hold up as a general ranking once a second seed was tested.)
 
 ## Emergent Language Analysis
 
@@ -85,29 +81,9 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 | Message Entropy | 3.761 bits | 2.083 bits | 2.312 bits | 3.351 bits |
 | Topographic Similarity | 0.253 | 0.233 | 0.193 | 0.148 |
 
-Both training methods reliably solve the task (all four runs well above 
-the 20% chance baseline) but consistently produce only weak-to-moderate 
-compositionality — topographic similarity stayed in the 0.15-0.25 range 
-across both methods and both seeds, well above 0 (random) but far below 
-1.0 (fully compositional), and no individual symbol was found to map 
-cleanly onto a single concept attribute in any run. This is consistent 
-with known findings in the emergent communication literature (e.g. 
-Kottur et al. 2017, Chaabouni et al. 2020), where task success does not 
-guarantee a human-interpretable, compositional code without additional 
-pressure (e.g. population-based training, explicit compositionality 
-regularization, or limited channel capacity) — none of which are 
-included in this implementation.
+Both training methods reliably solve the task (all four runs well above the 20% chance baseline) but consistently produce only weak-to-moderate compositionality — topographic similarity stayed in the 0.15–0.25 range across both methods and both seeds, well above 0 (random) but far below 1.0 (fully compositional), and no individual symbol was found to map cleanly onto a single concept attribute in any run. This is consistent with known findings in the emergent communication literature (e.g. Kottur et al. 2017, Chaabouni et al. 2020), where task success does not guarantee a human-interpretable, compositional code without additional pressure (e.g. population-based training, explicit compositionality regularization, or limited channel capacity) — none of which are included in this implementation.
 
-Task accuracy and message entropy varied substantially by seed for both 
-methods (e.g. Gumbel-Softmax ranged 75-93.75% accuracy across two seeds), 
-so no reliable accuracy or entropy ranking between the two training 
-methods can be claimed from this many runs. Topographic similarity was 
-the one metric that consistently favored Gumbel-Softmax across both 
-seeds (0.253 vs 0.193, and 0.233 vs 0.148), a weak signal worth further 
-investigation with more seeds, but not treated here as a strong 
-conclusion.
-
-*(Findings and plots to be added after training.)*
+Task accuracy and message entropy varied substantially by seed for both methods (e.g. Gumbel-Softmax ranged 75–93.75% accuracy across two seeds), so no reliable accuracy or entropy ranking between the two training methods can be claimed from this many runs. Topographic similarity was the one metric that consistently favored Gumbel-Softmax across both seeds (0.253 vs 0.193, and 0.233 vs 0.148), a weak signal worth further investigation with more seeds, but not treated here as a strong conclusion.
 
 ## License
 
