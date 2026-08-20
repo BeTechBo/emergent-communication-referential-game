@@ -78,7 +78,6 @@ Open `notebooks/analysis.ipynb` to reproduce the emergent-language analysis and 
 **Notes on training dynamics:** this task proved sensitive to batch size relative to dataset size — small batch counts per epoch (large batch size on a modest dataset) led to too few gradient updates and poor convergence, independent of model capacity or temperature settings. Reducing batch size to increase gradient steps per epoch was the key fix. We also found this architecture is sensitive to weight decay, which suppressed the sharp early representation shifts needed for the Sender/Receiver pair to break symmetry and establish a shared protocol.
 
 ## Emergent Language Analysis
-## Emergent Language Analysis
 
 | Metric | Gumbel-Softmax (seed 42) | Gumbel-Softmax (seed 1) | REINFORCE (seed 42) | REINFORCE (seed 1) |
 |---|---|---|---|---|
